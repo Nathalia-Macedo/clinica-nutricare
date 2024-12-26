@@ -340,12 +340,13 @@ export function SiteProvider({ children }) {
         },
         body: JSON.stringify(slideData),
       });
-
+      console.log(slideData)
       if (!response.ok) {
         throw new Error('Falha ao editar o slide');
       }
 
       const updatedSlide = await response.json();
+      console.log(updatedSlide)
       setSiteData(prevData => ({
         ...prevData,
         slides: prevData.slides.map(slide => 
