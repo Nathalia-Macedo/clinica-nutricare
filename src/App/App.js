@@ -3,10 +3,11 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { SiteProvider } from '../Context/SiteContext';
 import { Header } from '../Components/Header';
 import { Hero } from '../Components/Hero';
-// import { About } from '../Components/About';
+// import { About } from './components/About';
 import AdminPage from '../Pages/Admin';
+import { Login } from '../Pages/Login';
+import { ProtectedRoute } from '../Context/ProtectedRoute';
 
-// Página inicial que combina todos os componentes
 function Home() {
   return (
     <>
@@ -23,8 +24,12 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/admin" element={<AdminPage />} />
-          {/* Adicione mais rotas conforme necessário */}
+          <Route path="/admin" element={
+            <ProtectedRoute>
+              <AdminPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/login" element={<Login />} />
         </Routes>
       </BrowserRouter>
     </SiteProvider>
