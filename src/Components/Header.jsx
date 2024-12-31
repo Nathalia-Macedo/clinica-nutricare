@@ -57,6 +57,7 @@ const LazyImage = ({ src, alt, className }) => {
 
 export function Header() {
   const headerData = useHeaderData();
+  console.log(headerData)
   const contacts = headerData?.contacts?.[0] || {};
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -111,8 +112,8 @@ export function Header() {
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-[80px]">
             {/* Logo */}
-            <div className="w-32 h-12 relative">
-              {headerData?.logo ? (
+            <div className="w-45 h-12 relative">
+              {headerData.logo ? (
                 <LazyImage
                   src={headerData.logo}
                   alt="Nutricare"

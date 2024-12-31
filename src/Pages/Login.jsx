@@ -1,4 +1,4 @@
-// import React, { useState } from 'react';
+// import React, { useState, useEffect } from 'react';
 // import { useAuth } from '../Context/SiteContext';
 // import { useNavigate } from 'react-router-dom';
 // import { Eye, EyeOff } from 'lucide-react';
@@ -13,8 +13,15 @@
 //   const [showPassword, setShowPassword] = useState(false);
 //   const [isLoading, setIsLoading] = useState(false);
 //   const [error, setError] = useState('');
+//   const [isVisible, setIsVisible] = useState(false);
 //   const { login } = useAuth();
 //   const navigate = useNavigate();
+
+//   useEffect(() => {
+//     // Set a small timeout to ensure the CSS is applied after the component mounts
+//     const timer = setTimeout(() => setIsVisible(true), 50);
+//     return () => clearTimeout(timer);
+//   }, []);
 
 //   const handleSubmit = async (e) => {
 //     e.preventDefault();
@@ -24,6 +31,11 @@
 //     try {
 //       const result = await login(username, password, rememberMe);
 //       if (result.success) {
+//         // Armazena o token no localStorage se "Lembrar-me" estiver marcado
+//         if (rememberMe) {
+//           localStorage.setItem('nutricare_token', result.token);
+//         }
+//         // Redireciona para a página de admin
 //         navigate('/admin');
 //       } else {
 //         setError('Falha no login. Por favor, verifique suas credenciais.');
@@ -39,12 +51,16 @@
 //     <div className="min-h-screen flex items-center justify-center bg-cover bg-center py-12 px-4 sm:px-6 lg:px-8" 
 //          style={{ 
 //            fontFamily: 'Sora, sans-serif',
-//            backgroundImage: `url('https://images.unsplash.com/photo-1490818387583-1baba5e638af?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80')`,
+//            backgroundImage: `url('https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80')`,
 //          }}>
 //       <div className="max-w-md w-full space-y-8">
-//         <div className="bg-white bg-opacity-10 backdrop-filter backdrop-blur-lg rounded-xl shadow-2xl p-10">
+//         <div 
+//           className={`bg-white bg-opacity-10 backdrop-filter backdrop-blur-lg rounded-xl p-10 transition-all duration-500 ease-in-out ${
+//             isVisible ? 'opacity-100 shadow-2xl translate-y-0' : 'opacity-0 shadow-none translate-y-4'
+//           }`}
+//         >
 //           <div className="text-center">
-//             <h2 className="mt-6 text-3xl font-extrabold" style={{ color: nutriCareGreen }}>
+//             <h2 className="mt-6 text-3xl font-extrabold" style={{ color: "white" }}>
 //               Nutricare
 //             </h2>
 //             <p className="mt-2 text-sm text-gray-200">
@@ -62,7 +78,7 @@
 //                   name="username"
 //                   type="text"
 //                   required
-//                   className="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:z-10 sm:text-sm"
+//                   className="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:z-10 sm:text-sm transition-all duration-300 ease-in-out"
 //                   style={{ 
 //                     backgroundColor: 'rgba(255, 255, 255, 0.8)',
 //                     focusRing: `2px solid ${nutriCareGreen}`,
@@ -82,7 +98,7 @@
 //                   name="password"
 //                   type={showPassword ? "text" : "password"}
 //                   required
-//                   className="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:z-10 sm:text-sm"
+//                   className="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:z-10 sm:text-sm transition-all duration-300 ease-in-out"
 //                   style={{ 
 //                     backgroundColor: 'rgba(255, 255, 255, 0.8)',
 //                     focusRing: `2px solid ${nutriCareGreen}`,
@@ -108,7 +124,7 @@
 //                   id="remember-me"
 //                   name="remember-me"
 //                   type="checkbox"
-//                   className="h-4 w-4 rounded border-gray-300 focus:ring-2"
+//                   className="h-4 w-4 rounded border-gray-300 focus:ring-2 transition-all duration-300 ease-in-out"
 //                   style={{ 
 //                     backgroundColor: 'rgba(255, 255, 255, 0.8)',
 //                     color: nutriCareGreen,
@@ -123,14 +139,14 @@
 //               </div>
 
 //               <div className="text-sm">
-//                 <a href="#" className="font-medium hover:underline text-white">
+//                 <a href="#" className="font-medium hover:underline text-white transition-all duration-300 ease-in-out">
 //                   Esqueceu sua senha?
 //                 </a>
 //               </div>
 //             </div>
 
 //             {error && (
-//               <div className="text-red-300 text-sm mt-2 bg-red-500 bg-opacity-25 p-2 rounded">
+//               <div className="text-red-300 text-sm mt-2 bg-red-500 bg-opacity-25 p-2 rounded transition-all duration-300 ease-in-out">
 //                 {error}
 //               </div>
 //             )}
@@ -138,7 +154,7 @@
 //             <div>
 //               <button
 //                 type="submit"
-//                 className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors duration-300"
+//                 className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all duration-300 ease-in-out"
 //                 style={{ 
 //                   backgroundColor: nutriCareGreen,
 //                   focusRing: nutriCareGreen
@@ -163,7 +179,7 @@
 //   );
 // }
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../Context/SiteContext';
 import { useNavigate } from 'react-router-dom';
 import { Eye, EyeOff } from 'lucide-react';
@@ -178,8 +194,22 @@ export function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  const { login } = useAuth();
+  const [isVisible, setIsVisible] = useState(false);
+  const { login, user } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Set a small timeout to ensure the CSS is applied after the component mounts
+    const timer = setTimeout(() => setIsVisible(true), 50);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    // Se o usuário já estiver autenticado, redirecione para a página de admin
+    if (user) {
+      navigate('/admin');
+    }
+  }, [user, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -189,7 +219,7 @@ export function Login() {
     try {
       const result = await login(username, password, rememberMe);
       if (result.success) {
-        navigate('/admin');
+        // O redirecionamento será feito pelo useEffect acima quando o user for atualizado
       } else {
         setError('Falha no login. Por favor, verifique suas credenciais.');
       }
@@ -207,7 +237,11 @@ export function Login() {
            backgroundImage: `url('https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80')`,
          }}>
       <div className="max-w-md w-full space-y-8">
-        <div className="bg-white bg-opacity-10 backdrop-filter backdrop-blur-lg rounded-xl shadow-2xl p-10">
+        <div 
+          className={`bg-white bg-opacity-10 backdrop-filter backdrop-blur-lg rounded-xl p-10 transition-all duration-500 ease-in-out ${
+            isVisible ? 'opacity-100 shadow-2xl translate-y-0' : 'opacity-0 shadow-none translate-y-4'
+          }`}
+        >
           <div className="text-center">
             <h2 className="mt-6 text-3xl font-extrabold" style={{ color: "white" }}>
               Nutricare
@@ -227,7 +261,7 @@ export function Login() {
                   name="username"
                   type="text"
                   required
-                  className="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:z-10 sm:text-sm"
+                  className="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:z-10 sm:text-sm transition-all duration-300 ease-in-out"
                   style={{ 
                     backgroundColor: 'rgba(255, 255, 255, 0.8)',
                     focusRing: `2px solid ${nutriCareGreen}`,
@@ -247,7 +281,7 @@ export function Login() {
                   name="password"
                   type={showPassword ? "text" : "password"}
                   required
-                  className="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:z-10 sm:text-sm"
+                  className="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:z-10 sm:text-sm transition-all duration-300 ease-in-out"
                   style={{ 
                     backgroundColor: 'rgba(255, 255, 255, 0.8)',
                     focusRing: `2px solid ${nutriCareGreen}`,
@@ -273,7 +307,7 @@ export function Login() {
                   id="remember-me"
                   name="remember-me"
                   type="checkbox"
-                  className="h-4 w-4 rounded border-gray-300 focus:ring-2"
+                  className="h-4 w-4 rounded border-gray-300 focus:ring-2 transition-all duration-300 ease-in-out"
                   style={{ 
                     backgroundColor: 'rgba(255, 255, 255, 0.8)',
                     color: nutriCareGreen,
@@ -288,14 +322,14 @@ export function Login() {
               </div>
 
               <div className="text-sm">
-                <a href="#" className="font-medium hover:underline text-white">
+                <a href="#" className="font-medium hover:underline text-white transition-all duration-300 ease-in-out">
                   Esqueceu sua senha?
                 </a>
               </div>
             </div>
 
             {error && (
-              <div className="text-red-300 text-sm mt-2 bg-red-500 bg-opacity-25 p-2 rounded">
+              <div className="text-red-300 text-sm mt-2 bg-red-500 bg-opacity-25 p-2 rounded transition-all duration-300 ease-in-out">
                 {error}
               </div>
             )}
@@ -303,7 +337,7 @@ export function Login() {
             <div>
               <button
                 type="submit"
-                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors duration-300"
+                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all duration-300 ease-in-out"
                 style={{ 
                   backgroundColor: nutriCareGreen,
                   focusRing: nutriCareGreen
@@ -327,4 +361,5 @@ export function Login() {
     </div>
   );
 }
+
 
