@@ -18,6 +18,7 @@ const Sidebar = ({ activeTab, setActiveTab, isMobile, sidebarVisible, toggleSide
               onClick={toggleSidebar}
               className="p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-green-500"
             >
+              {sidebarVisible ? <ChevronLeft className="h-6 w-6" /> : <ChevronRight className="h-6 w-6" />}
             </button>
           </div>
           <nav className="flex-1 overflow-y-auto">
