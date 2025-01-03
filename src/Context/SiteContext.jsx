@@ -13,56 +13,61 @@ export function SiteProvider({ children }) {
         social: []
       }]
     },
-    slides: []
+    slides: [],
+    about: {}
   });
-  const [loading, setLoading] = useState(true);
+  const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState(null);
   const [user, setUser] = useState(null);
 
-  useEffect(() => {
-    fetchSiteData();
-    const token = localStorage.getItem('nutricare_token');
-    if (token) {
-      setUser({ token });
-    }
-  }, []);
-
   async function fetchSiteData() {
     try {
-      setLoading(true);
-      const [headerResponse, slidesResponse] = await Promise.all([
+      setIsLoaded(false);
+      const [headerResponse, slidesResponse, aboutResponse] = await Promise.all([
         fetch('https://api-nutricare-1.onrender.com/api/header'),
-        fetch('https://api-nutricare-1.onrender.com/api/slides')
+        fetch('https://api-nutricare-1.onrender.com/api/slides'),
+        fetch('https://api-nutricare-1.onrender.com/api/about')
       ]);
 
-      if (!headerResponse.ok) {
-        throw new Error('Falha ao carregar dados do header');
-      }
-      if (!slidesResponse.ok) {
-        throw new Error('Falha ao carregar dados dos slides');
+      if (!headerResponse.ok || !slidesResponse.ok || !aboutResponse.ok) {
+        throw new Error('Falha ao carregar dados do site');
       }
 
-      const [headerData, slidesData] = await Promise.all([
+      const [headerData, slidesData, aboutData] = await Promise.all([
         headerResponse.json(),
-        slidesResponse.json()
+        slidesResponse.json(),
+        aboutResponse.json()
       ]);
 
-      setSiteData(prevData => ({
-        ...prevData,
+      setSiteData({
         header: headerData,
-        slides: slidesData
-      }));
+        slides: slidesData,
+        about: aboutData
+      });
+
+      const token = localStorage.getItem('nutricare_token') || sessionStorage.getItem('nutricare_token');
+      if (token) {
+        setUser({ authToken: token });
+      }
     } catch (err) {
       console.error('Erro ao buscar dados do site:', err);
       setError(err.message);
     } finally {
-      setLoading(false);
+      setIsLoaded(true);
     }
   }
 
+  useEffect(() => {
+    fetchSiteData();
+    const token = localStorage.getItem('nutricare_token') || sessionStorage.getItem('nutricare_token');
+    if (token) {
+      setUser({ authToken: token });
+    }
+  }, []);
+
   async function updateHeaderData(newHeaderData) {
     try {
-      setLoading(true);
+      setIsLoaded(false);
       const response = await fetch('https://api-nutricare-1.onrender.com/api/header', {
         method: 'PUT',
         headers: {
@@ -89,21 +94,19 @@ export function SiteProvider({ children }) {
         header: updatedHeaderData,
       }));
 
-      console.log(updateHeaderData)
-
       return { success: true, message: 'Header atualizado com sucesso!' };
     } catch (err) {
       console.error('Erro ao atualizar dados do header:', err);
       setError(err.message);
       return { success: false, message: err.message };
     } finally {
-      setLoading(false);
+      setIsLoaded(true);
     }
   }
 
   async function createSlide(slideData) {
     try {
-      setLoading(true);
+      setIsLoaded(false);
       const response = await fetch('https://api-nutricare-1.onrender.com/api/slides', {
         method: 'POST',
         headers: {
@@ -128,13 +131,13 @@ export function SiteProvider({ children }) {
       setError(err.message);
       return { success: false, message: err.message };
     } finally {
-      setLoading(false);
+      setIsLoaded(true);
     }
   }
 
   async function editSlide(id, slideData) {
     try {
-      setLoading(true);
+      setIsLoaded(false);
       const response = await fetch(`https://api-nutricare-1.onrender.com/api/slides/${id}`, {
         method: 'PUT',
         headers: {
@@ -161,13 +164,13 @@ export function SiteProvider({ children }) {
       setError(err.message);
       return { success: false, message: err.message };
     } finally {
-      setLoading(false);
+      setIsLoaded(true);
     }
   }
 
   async function deleteSlide(id) {
     try {
-      setLoading(true);
+      setIsLoaded(false);
       const response = await fetch(`https://api-nutricare-1.onrender.com/api/slides/${id}`, {
         method: 'DELETE',
       });
@@ -187,13 +190,13 @@ export function SiteProvider({ children }) {
       setError(err.message);
       return { success: false, message: err.message };
     } finally {
-      setLoading(false);
+      setIsLoaded(true);
     }
   }
 
   async function login(username, password, rememberMe) {
     try {
-      setLoading(true);
+      setIsLoaded(false);
       const response = await fetch('https://api-nutricare-1.onrender.com/api/auth/login', {
         method: 'POST',
         headers: {
@@ -207,33 +210,69 @@ export function SiteProvider({ children }) {
       }
 
       const data = await response.json();
-      setUser({ token: data.token });
+      const authToken = data.token;
+      setUser({ authToken });
 
-      if (rememberMe) {
-        localStorage.setItem('nutricare_token', data.token);
-      } else {
-        // Se "lembrar-me" não estiver marcado, remova o token do localStorage
-        localStorage.removeItem('nutricare_token');
-      }
+     
+      localStorage.setItem('nutricare_token', authToken);
+     
 
-      return { success: true, token: data.token };
+      return { success: true, authToken };
     } catch (err) {
       console.error('Erro ao fazer login:', err);
       setError(err.message);
       return { success: false, message: err.message };
     } finally {
-      setLoading(false);
+      setIsLoaded(true);
     }
   }
 
   function logout() {
     setUser(null);
     localStorage.removeItem('nutricare_token');
+    sessionStorage.removeItem('nutricare_token');
+  }
+
+  async function updateAboutData(newAboutData) {
+    try {
+      setIsLoaded(false);
+      const token = localStorage.getItem('nutricare_token') || sessionStorage.getItem('nutricare_token');
+      console.log(token)
+      if (!token) {
+        throw new Error('Token de autenticação não encontrado');
+      }
+      const response = await fetch('https://api-nutricare-1.onrender.com/api/about', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(newAboutData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Falha ao atualizar dados da seção Sobre');
+      }
+
+      const updatedAboutData = await response.json();
+      setSiteData(prevData => ({
+        ...prevData,
+        about: updatedAboutData,
+      }));
+
+      return { success: true, message: 'Seção Sobre atualizada com sucesso!' };
+    } catch (err) {
+      console.error('Erro ao atualizar dados da seção Sobre:', err);
+      setError(err.message);
+      return { success: false, message: err.message };
+    } finally {
+      setIsLoaded(true);
+    }
   }
 
   const value = {
     siteData,
-    loading,
+    isLoaded,
     error,
     user,
     updateHeaderData,
@@ -243,6 +282,7 @@ export function SiteProvider({ children }) {
     refetchSiteData: fetchSiteData,
     login,
     logout,
+    updateAboutData,
   };
 
   return (
@@ -271,8 +311,8 @@ export function useSlidesData() {
 }
 
 export function useSiteLoading() {
-  const { loading } = useSiteData();
-  return loading;
+  const { isLoaded } = useSiteData();
+  return !isLoaded;
 }
 
 export function useSiteError() {
@@ -284,4 +324,11 @@ export function useAuth() {
   const { user, login, logout } = useSiteData();
   return { user, login, logout };
 }
+
+export function useAboutData() {
+  const { siteData } = useSiteData();
+  return siteData.about;
+}
+
+
 
