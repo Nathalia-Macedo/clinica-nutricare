@@ -54,8 +54,8 @@ export function AboutCards({ cards }) {
       
       {/* Schedule Button */}
       <div className="mt-12 text-center">
-        <button
-          className="bg-[#8CC63F] text-white px-8 py-3 rounded-full text-lg font-medium 
+        <button style={{backgroundColor:"#8CC63F"}}
+          className="text-white px-8 py-3 rounded-full text-lg font-medium 
                    hover:bg-[#7AB32F] transition-colors duration-300 uppercase"
         >
           Agendar Consulta

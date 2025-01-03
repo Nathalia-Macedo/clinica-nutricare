@@ -1,5 +1,5 @@
 // import React from 'react';
-// import { Settings, ImageIcon, ChevronLeft, ChevronRight, X, Menu } from 'lucide-react';
+// import { Settings, ImageIcon, ChevronLeft, ChevronRight, X, Menu, Info } from 'lucide-react';
 
 // const Sidebar = ({ activeTab, setActiveTab, isMobile, sidebarVisible, toggleSidebar }) => {
 //   return (
@@ -26,6 +26,7 @@
 //               {[
 //                 { id: 'header', icon: <Settings className="h-5 w-5" />, label: 'Configurações' },
 //                 { id: 'slides', icon: <ImageIcon className="h-5 w-5" />, label: 'Gerenciar Slides' },
+//                 { id: 'about', icon: <Info className="h-5 w-5" />, label: 'Sobre' },
 //               ].map((item) => (
 //                 <li key={item.id}>
 //                   <button
@@ -70,16 +71,23 @@
 // export default Sidebar;
 
 import React from 'react';
-import { Settings, ImageIcon, ChevronLeft, ChevronRight, X, Menu, Info } from 'lucide-react';
+import { Settings, ImageIcon, ChevronLeft, ChevronRight, X, Menu, Info, Award } from 'lucide-react';
 
 const Sidebar = ({ activeTab, setActiveTab, isMobile, sidebarVisible, toggleSidebar }) => {
+  const menuItems = [
+    { id: 'header', icon: <Settings className="h-5 w-5" />, label: 'Configurações' },
+    { id: 'slides', icon: <ImageIcon className="h-5 w-5" />, label: 'Gerenciar Slides' },
+    { id: 'about', icon: <Info className="h-5 w-5" />, label: 'Sobre' },
+    { id: 'specialties', icon: <Award className="h-5 w-5" />, label: 'Especialidades' },
+  ];
+
   return (
     <>
       <aside
         className={`
           fixed inset-y-0 left-0 z-30 bg-white shadow-lg transition-all duration-300 ease-in-out
           ${sidebarVisible ? 'w-64' : 'w-20'}
-          ${isMobile ? (sidebarVisible ? 'block' : 'hidden') : 'translate-x-0'}
+          ${isMobile ? (sidebarVisible ? 'translate-x-0' : '-translate-x-full') : 'translate-x-0'}
         `}
       >
         <div className="flex flex-col h-full">
@@ -94,11 +102,7 @@ const Sidebar = ({ activeTab, setActiveTab, isMobile, sidebarVisible, toggleSide
           </div>
           <nav className="flex-1 overflow-y-auto">
             <ul className="p-2 space-y-2">
-              {[
-                { id: 'header', icon: <Settings className="h-5 w-5" />, label: 'Configurações' },
-                { id: 'slides', icon: <ImageIcon className="h-5 w-5" />, label: 'Gerenciar Slides' },
-                { id: 'about', icon: <Info className="h-5 w-5" />, label: 'Sobre' },
-              ].map((item) => (
+              {menuItems.map((item) => (
                 <li key={item.id}>
                   <button
                     onClick={() => {
@@ -130,7 +134,7 @@ const Sidebar = ({ activeTab, setActiveTab, isMobile, sidebarVisible, toggleSide
       {isMobile && (
         <button
           onClick={toggleSidebar}
-          className="fixed top-4 right-4 z-50 p-3 rounded-full bg-green-500 text-white shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+          className="fixed top-4 left-4 z-50 p-3 rounded-full bg-green-500 text-white shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
         >
           {sidebarVisible ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </button>
